@@ -25,7 +25,7 @@ const productSchema = new Schema({
             description: String,
             price: Number,
             inStock: Number,
-            images: [Buffer]
+            images: [String]
         }]
 });
 const orderSchema = new Schema({

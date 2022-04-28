@@ -62,6 +62,7 @@ app.post("/getcustomer", async (req: any, res: any) => {
 
 // Submit new product to database
 app.post("/product", async (req: any, res: any) => {
+  res.header('Access-Control-Allow-Origin', '*')
   console.log('SUBMITTING NEW PRODUCT...')
   const newProduct = new Product(req.body);
   await newProduct

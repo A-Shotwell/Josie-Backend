@@ -22,7 +22,7 @@ const productSchema = new Schema({
         description: String,
         price: Number,
         inStock: Number,
-        images: [Buffer]
+        images: [String] // base64 encoded
     }]
 })
 

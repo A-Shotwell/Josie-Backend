@@ -35,7 +35,7 @@ blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on th
 //   methods: ["GET", "POST", "OPTIONS", "PUT", "PATCH", "DELETE"],
 //   optionsSuccessStatus: 200
 // }
-app.use((0, cors_1.default)());
+app.use((0, cors_1.default)( /*corsOptions*/));
 // app.use(function (req, res, next) {
 //   res.header('Access-Control-Allow-Origin', '*');
 //   res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
@@ -66,6 +66,7 @@ app.post("/getcustomer", (req, res) => __awaiter(void 0, void 0, void 0, functio
 }));
 // Submit new product to database
 app.post("/product", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    res.header('Access-Control-Allow-Origin', '*');
     console.log('SUBMITTING NEW PRODUCT...');
     const newProduct = new schema_1.Product(req.body);
     yield newProduct
