@@ -23,20 +23,26 @@ const port = process.env.PORT || 5000;
 const userEmail = process.env.USER_EMAIL;
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
-app.use(body_parser_1.default.json()); // Throwing error: "body-parser deprecated undefined extended: provide extended option"
-app.use(body_parser_1.default.urlencoded());
-app.use(function (req, res, next) {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
-    next();
-});
-const corsOptions = {
-    origin: '*',
-    optionsSuccessStatus: 200
-};
-app.use((0, cors_1.default)(corsOptions)); // CONNECTION REFUSED ERROR. Config needed?
+app.use(body_parser_1.default.json());
+app.use(body_parser_1.default.urlencoded({ extended: true }));
+/*
+CURRENT ERROR:
+Access to XMLHttpRequest at 'http://localhost:5000/product' from origin 'http://localhost:3000' has been
+blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.
+*/
+// const corsOptions = {
+//   origin: "*",
+//   methods: ["GET", "POST", "OPTIONS", "PUT", "PATCH", "DELETE"],
+//   optionsSuccessStatus: 200
+// }
+app.use((0, cors_1.default)());
+// app.use(function (req, res, next) {
+//   res.header('Access-Control-Allow-Origin', '*');
+//   res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+//   res.header('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+//   res.header('Access-Control-Allow-Credentials', 'true');
+//   next();
+// });
 function dbConnect() {
     return __awaiter(this, void 0, void 0, function* () {
         yield mongoose_1.default.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.xxpzv.mongodb.net/Josie?retryWrites=true&w=majority`);
@@ -44,11 +50,6 @@ function dbConnect() {
     });
 }
 dbConnect().catch((err) => console.log(err));
-// MIDDLEWARE ???
-// app.use((req, res, next) => {
-//     // console.log('MIDDLEWARE')
-//     next()
-// })
 // Submit new customer to database
 app.post("/customer", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const newCustomer = new schema_1.Customer(req.body);

@@ -12,27 +12,28 @@ const userEmail = process.env.USER_EMAIL;
 
 const app = express();
 app.use(express.json());
-app.use(bodyParser.json()); // Throwing error: "body-parser deprecated undefined extended: provide extended option"
-app.use(bodyParser.urlencoded());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 /*
 CURRENT ERROR: 
 Access to XMLHttpRequest at 'http://localhost:5000/product' from origin 'http://localhost:3000' has been 
 blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.
 */
-const corsOptions = {
-  origin: '*',
-  optionsSuccessStatus: 200
-}
-app.use(cors(corsOptions));
+// const corsOptions = {
+//   origin: "*",
+//   methods: ["GET", "POST", "OPTIONS", "PUT", "PATCH", "DELETE"],
+//   optionsSuccessStatus: 200
+// }
+app.use(cors(/*corsOptions*/));
 
-app.use(function (req, res, next) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  next();
-});
+// app.use(function (req, res, next) {
+//   res.header('Access-Control-Allow-Origin', '*');
+//   res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+//   res.header('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+//   res.header('Access-Control-Allow-Credentials', 'true');
+//   next();
+// });
 
 async function dbConnect() {
   await mongoose.connect(
