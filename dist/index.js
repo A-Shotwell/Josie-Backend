@@ -19,13 +19,24 @@ const schema_1 = require("./schema/schema");
 const cors_1 = __importDefault(require("cors"));
 const body_parser_1 = __importDefault(require("body-parser"));
 dotenv_1.default.config();
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 5000;
 const userEmail = process.env.USER_EMAIL;
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use(body_parser_1.default.json()); // Throwing error: "body-parser deprecated undefined extended: provide extended option"
 app.use(body_parser_1.default.urlencoded());
-app.use((0, cors_1.default)());
+app.use(function (req, res, next) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    next();
+});
+const corsOptions = {
+    origin: '*',
+    optionsSuccessStatus: 200
+};
+app.use((0, cors_1.default)(corsOptions)); // CONNECTION REFUSED ERROR. Config needed?
 function dbConnect() {
     return __awaiter(this, void 0, void 0, function* () {
         yield mongoose_1.default.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.xxpzv.mongodb.net/Josie?retryWrites=true&w=majority`);
@@ -54,6 +65,7 @@ app.post("/getcustomer", (req, res) => __awaiter(void 0, void 0, void 0, functio
 }));
 // Submit new product to database
 app.post("/product", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log('SUBMITTING NEW PRODUCT...');
     const newProduct = new schema_1.Product(req.body);
     yield newProduct
         .save()

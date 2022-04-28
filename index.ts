@@ -7,14 +7,32 @@ import cors from "cors";
 import bodyParser from "body-parser";
 
 dotenv.config();
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 5000;
 const userEmail = process.env.USER_EMAIL;
 
 const app = express();
 app.use(express.json());
 app.use(bodyParser.json()); // Throwing error: "body-parser deprecated undefined extended: provide extended option"
 app.use(bodyParser.urlencoded());
-app.use(cors());
+
+/*
+CURRENT ERROR: 
+Access to XMLHttpRequest at 'http://localhost:5000/product' from origin 'http://localhost:3000' has been 
+blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.
+*/
+const corsOptions = {
+  origin: '*',
+  optionsSuccessStatus: 200
+}
+app.use(cors(corsOptions));
+
+app.use(function (req, res, next) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  next();
+});
 
 async function dbConnect() {
   await mongoose.connect(
@@ -24,12 +42,6 @@ async function dbConnect() {
 }
 
 dbConnect().catch((err) => console.log(err));
-
-// MIDDLEWARE ???
-// app.use((req, res, next) => {
-//     // console.log('MIDDLEWARE')
-//     next()
-// })
 
 // Submit new customer to database
 app.post("/customer", async (req: any, res: any) => {
@@ -49,6 +61,7 @@ app.post("/getcustomer", async (req: any, res: any) => {
 
 // Submit new product to database
 app.post("/product", async (req: any, res: any) => {
+  console.log('SUBMITTING NEW PRODUCT...')
   const newProduct = new Product(req.body);
   await newProduct
     .save()
