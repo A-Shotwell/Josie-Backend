@@ -31,9 +31,8 @@ Access to XMLHttpRequest at 'http://localhost:5000/product' from origin 'http://
 blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.
 */
 const corsOptions = {
-    origin: "http://localhost:3000",
+    origin: "*",
     methods: ["GET", "POST", "OPTIONS", "PUT", "PATCH", "DELETE"],
-    credentials: true,
     optionsSuccessStatus: 200
 };
 app.use((0, cors_1.default)(corsOptions));
@@ -67,7 +66,7 @@ app.post("/getcustomer", (req, res) => __awaiter(void 0, void 0, void 0, functio
 }));
 // Submit new product to database
 app.post("/product", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+    res.set('Access-Control-Allow-Origin', '*'); // CORS header
     console.log('SUBMITTING NEW PRODUCT...');
     const newProduct = new schema_1.Product(req.body);
     yield newProduct
