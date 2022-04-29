@@ -25,7 +25,7 @@ const productSchema = new Schema({
             description: String,
             price: Number,
             inStock: Number,
-            images: [String]
+            images: [String] // base64 encoded
         }]
 });
 const orderSchema = new Schema({
