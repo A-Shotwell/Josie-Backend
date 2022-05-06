@@ -18,6 +18,7 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const schema_1 = require("./schema/schema");
 const cors_1 = __importDefault(require("cors"));
 const body_parser_1 = __importDefault(require("body-parser"));
+const path_1 = __importDefault(require("path"));
 dotenv_1.default.config();
 const port = process.env.PORT || 5000;
 const userEmail = process.env.USER_EMAIL;
@@ -30,12 +31,13 @@ CURRENT ERROR:
 Access to XMLHttpRequest at 'http://localhost:5000/product' from origin 'http://localhost:3000' has been
 blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.
 */
-const corsOptions = {
-    origin: "*",
-    methods: ["GET", "POST", "OPTIONS", "PUT", "PATCH", "DELETE"],
-    optionsSuccessStatus: 200
-};
-app.use((0, cors_1.default)(corsOptions));
+// const corsOptions = {
+//   origin: "*",
+//   methods: ["GET", "POST", "OPTIONS", "PUT", "PATCH", "DELETE"],
+//   optionsSuccessStatus: 200
+// }
+app.use((0, cors_1.default)( /*corsOptions*/));
+app.use("/images", express_1.default.static(path_1.default.join(__dirname, "images")));
 // app.use(function (req, res, next) {
 //   res.header('Access-Control-Allow-Origin', '*');
 //   res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
@@ -43,6 +45,10 @@ app.use((0, cors_1.default)(corsOptions));
 //   res.header('Access-Control-Allow-Credentials', 'true');
 //   next();
 // });
+app.use(function (req, res, next) {
+    res.set('Access-Control-Allow-Origin', '*'); // CORS header
+    next();
+});
 function dbConnect() {
     return __awaiter(this, void 0, void 0, function* () {
         yield mongoose_1.default.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.xxpzv.mongodb.net/Josie?retryWrites=true&w=majority`);
@@ -53,9 +59,8 @@ dbConnect().catch((err) => console.log(err));
 // Submit new customer to database
 app.post("/customer", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const newCustomer = new schema_1.Customer(req.body);
-    yield newCustomer
-        .save()
-        .then(() => console.log(`Customer saved:\n${newCustomer}`));
+    yield newCustomer.save();
+    console.log(`Customer saved:\n${newCustomer}`);
 }));
 // Get customer by last name
 app.post("/getcustomer", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -66,12 +71,11 @@ app.post("/getcustomer", (req, res) => __awaiter(void 0, void 0, void 0, functio
 }));
 // Submit new product to database
 app.post("/product", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.set('Access-Control-Allow-Origin', '*'); // CORS header
+    // res.set('Access-Control-Allow-Origin', '*') // CORS header
     console.log('SUBMITTING NEW PRODUCT...');
     const newProduct = new schema_1.Product(req.body);
-    yield newProduct
-        .save()
-        .then(() => console.log(`Product saved:\n${newProduct}`));
+    yield newProduct.save();
+    console.log(`Product saved:\n${newProduct}`);
 }));
 // Get product by name
 app.post("/getproduct", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -83,7 +87,8 @@ app.post("/getproduct", (req, res) => __awaiter(void 0, void 0, void 0, function
 // Post new order
 app.post("/order", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const newOrder = new schema_1.Order(req.body);
-    yield newOrder.save().then(() => console.log(`Order saved:\n${newOrder}`));
+    yield newOrder.save();
+    console.log(`Order saved:\n${newOrder}`);
 }));
 app.post("/getorder", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // get order by customer last name

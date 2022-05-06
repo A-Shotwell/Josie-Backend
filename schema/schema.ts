@@ -26,6 +26,14 @@ const productSchema = new Schema({
     }]
 })
 
+const imageChunkSchema = new Schema({
+    product: String,
+    variant: String,
+    series: String,
+    part: Number,
+    data: String
+})
+
 const orderSchema = new Schema({
     firstName: String,
     lastName: String,
@@ -88,7 +96,8 @@ const blogSchema = new Schema({
 const Customer = mongoose.model('Customer', customerSchema)
 // const Cart = mongoose.model('Cart', cartSchema)
 const Product = mongoose.model('Product', productSchema)
+const ImageChunk = mongoose.model('ImageChunk', imageChunkSchema)
 const Order = mongoose.model('Order', orderSchema)
 const Blog = mongoose.model('Blog', blogSchema)
 
-export { /*Cart,*/ Product, Order, Customer, Blog }
+export { /*Cart,*/ Product, ImageChunk, Order, Customer, Blog }

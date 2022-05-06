@@ -2,9 +2,11 @@ import dotenv from "dotenv";
 import express, { application } from "express";
 import emailjs from "emailjs-com";
 import mongoose from "mongoose";
-import { Customer, Product, Order } from "./schema/schema";
+import { Customer, Product, ImageChunk, Order } from "./schema/schema";
 import cors from "cors";
 import bodyParser from "body-parser";
+import path from 'path'
+import middleware from "./middleware/images";
 
 dotenv.config();
 const port = process.env.PORT || 5000;
@@ -26,6 +28,7 @@ blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on th
 //   optionsSuccessStatus: 200
 // }
 app.use(cors(/*corsOptions*/));
+app.use("/images", express.static(path.join(__dirname, "images")))
 
 // app.use(function (req, res, next) {
 //   res.header('Access-Control-Allow-Origin', '*');
@@ -34,6 +37,11 @@ app.use(cors(/*corsOptions*/));
 //   res.header('Access-Control-Allow-Credentials', 'true');
 //   next();
 // });
+
+app.use(function (req, res, next) {
+  res.set('Access-Control-Allow-Origin', '*') // CORS header
+  next()
+})
 
 async function dbConnect() {
   await mongoose.connect(
@@ -47,9 +55,8 @@ dbConnect().catch((err) => console.log(err));
 // Submit new customer to database
 app.post("/customer", async (req: any, res: any) => {
   const newCustomer = new Customer(req.body);
-  await newCustomer
-    .save()
-    .then(() => console.log(`Customer saved:\n${newCustomer}`));
+  await newCustomer.save()
+  console.log(`Customer saved:\n${newCustomer}`);
 });
 
 // Get customer by last name
@@ -62,12 +69,11 @@ app.post("/getcustomer", async (req: any, res: any) => {
 
 // Submit new product to database
 app.post("/product", async (req: any, res: any) => {
-  res.set('Access-Control-Allow-Origin', '*') // CORS header
+  // res.set('Access-Control-Allow-Origin', '*') // CORS header
   console.log('SUBMITTING NEW PRODUCT...')
   const newProduct = new Product(req.body);
-  await newProduct
-    .save()
-    .then(() => console.log(`Product saved:\n${newProduct}`));
+  await newProduct.save()
+  console.log(`Product saved:\n${newProduct}`);
 });
 
 // Get product by name
@@ -78,10 +84,17 @@ app.post("/getproduct", async (req: any, res: any) => {
   res.send(product);
 });
 
+app.post("/imagechunk", async (req: any, res: any) => {
+  const imageChunk = new ImageChunk(req.body)
+  await imageChunk.save()
+  console.log(`Image Chunk Saved: ${req.body}`)
+})
+
 // Post new order
 app.post("/order", async (req: any, res: any) => {
   const newOrder = new Order(req.body);
-  await newOrder.save().then(() => console.log(`Order saved:\n${newOrder}`));
+  await newOrder.save()
+  console.log(`Order saved:\n${newOrder}`);
 });
 
 app.post("/getorder", async (req: any, res: any) => {
