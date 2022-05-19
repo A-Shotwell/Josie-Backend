@@ -14,16 +14,26 @@ const { Schema } = mongoose;
 //     ]
 // })
 
+// const productSchema = new Schema({
+//     name: String,
+//     description: String,
+//     variants: [{
+//         name: String,
+//         description: String,
+//         price: Number,
+//         inStock: Number,
+//         images: [String] // base64 encoded
+//     }]
+// })
+
 const productSchema = new Schema({
     name: String,
     description: String,
-    variants: [{
-        name: String,
-        description: String,
-        price: Number,
-        inStock: Number,
-        images: [String] // base64 encoded
-    }]
+    varName: String,
+    varDescription: String,
+    price: Number,
+    inStock: Number,
+    images: [String] // file names to search for base64 string chunks
 })
 
 const imageChunkSchema = new Schema({

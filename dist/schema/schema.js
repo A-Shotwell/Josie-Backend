@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Blog = exports.Customer = exports.Order = exports.Product = void 0;
+exports.Blog = exports.Customer = exports.Order = exports.ImageChunk = exports.Product = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
 const { Schema } = mongoose_1.default;
 // Can cart data be stored on the front end?
@@ -27,6 +27,13 @@ const productSchema = new Schema({
             inStock: Number,
             images: [String] // base64 encoded
         }]
+});
+const imageChunkSchema = new Schema({
+    product: String,
+    variant: String,
+    series: String,
+    part: Number,
+    data: String
 });
 const orderSchema = new Schema({
     firstName: String,
@@ -89,6 +96,8 @@ exports.Customer = Customer;
 // const Cart = mongoose.model('Cart', cartSchema)
 const Product = mongoose_1.default.model('Product', productSchema);
 exports.Product = Product;
+const ImageChunk = mongoose_1.default.model('ImageChunk', imageChunkSchema);
+exports.ImageChunk = ImageChunk;
 const Order = mongoose_1.default.model('Order', orderSchema);
 exports.Order = Order;
 const Blog = mongoose_1.default.model('Blog', blogSchema);

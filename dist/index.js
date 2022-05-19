@@ -84,6 +84,11 @@ app.post("/getproduct", (req, res) => __awaiter(void 0, void 0, void 0, function
     console.log(product);
     res.send(product);
 }));
+app.post("/imagechunk", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const imageChunk = new schema_1.ImageChunk(req.body);
+    yield imageChunk.save();
+    console.log(`Image Chunk Saved: ${req.body}`);
+}));
 // Post new order
 app.post("/order", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const newOrder = new schema_1.Order(req.body);

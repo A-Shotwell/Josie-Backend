@@ -6,7 +6,6 @@ import { Customer, Product, ImageChunk, Order } from "./schema/schema";
 import cors from "cors";
 import bodyParser from "body-parser";
 import path from 'path'
-import middleware from "./middleware/images";
 
 dotenv.config();
 const port = process.env.PORT || 5000;
