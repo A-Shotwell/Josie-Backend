@@ -27,18 +27,16 @@ const { Schema } = mongoose;
 // })
 
 const productSchema = new Schema({
-    name: String,
-    description: String,
-    varName: String,
-    varDescription: String,
+    product: String,
+    productDesc: String,
+    variant: String,
+    variantDesc: String,
+    imagesFiles: [String], // file names to search for base64 string chunks
     price: Number,
     inStock: Number,
-    images: [String] // file names to search for base64 string chunks
 })
 
 const imageChunkSchema = new Schema({
-    product: String,
-    variant: String,
     series: String,
     part: Number,
     data: String
